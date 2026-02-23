@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imposter - Social Deduction Party Game</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header -->
+  <header id="game-header">
+    <div class="header-left">
+      <span class="logo">🎭 Imposter</span>
+    </div>
+    <div class="header-right">
+      <button id="sound-toggle" class="icon-btn" title="Toggle Sound">
+        <span class="sound-on">🔊</span>
+        <span class="sound-off hidden">🔇</span>
+      </button>
+      <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+        <span class="theme-dark">☀️</span>
+        <span class="theme-light hidden">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="app">
+
+    <!-- Screen: Welcome -->
+    <section id="screen-welcome" class="screen active">
+      <div class="screen-content welcome-content">
+        <div class="welcome-hero">
+          <div class="welcome-icon">🎭</div>
+          <h1>Imposter</h1>
+          <p class="tagline">The Social Deduction Party Game</p>
+          <p class="description">Find the imposters among you through clever hints and sharp deduction. Play locally or online with friends!</p>
+        </div>
+        <div class="welcome-features">
+          <div class="feature-chip">🕵️ 3+ Players</div>
+          <div class="feature-chip">🌐 Online Play</div>
+          <div class="feature-chip">🗳️ Vote & Eliminate</div>
+        </div>
+        <button id="btn-start" class="btn btn-primary btn-large">Start New Game</button>
+        <button id="btn-how-to-play" class="btn btn-ghost">How to Play</button>
+        <button id="btn-scores" class="btn btn-ghost">Scores</button>
+      </div>
+    </section>
+
+    <!-- Screen: How to Play -->
+    <section id="screen-how-to-play" class="screen">
+      <div class="screen-content">
+        <h2>How to Play</h2>
+        <div class="rules-list">
+          <div class="rule-card">
+            <div class="rule-number">1</div>
+            <div class="rule-text">
+              <h3>Setup</h3>
+              <p>Add player names and choose a Coordinator. The Coordinator sets two similar words — one for normal players, one for imposters.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-number">2</div>
+            <div class="rule-text">
+              <h3>Word Distribution</h3>
+              <p>Each player sees their secret word privately. Imposters get a different word but don't know they're imposters!</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-number">3</div>
+            <div class="rule-text">
+              <h3>Hint Round</h3>
+              <p>Each player gives one spoken hint about their word. Be subtle — too obvious and the imposters catch on, too vague and you look suspicious!</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-number">4</div>
+            <div class="rule-text">
+              <h3>Discussion</h3>
+              <p>Discuss openly who you think the imposter is. Look for hints that don't quite match.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-number">5</div>
+            <div class="rule-text">
+              <h3>Vote</h3>
+              <p>Each player votes for who they think is an imposter. The player with the most votes is eliminated.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-number">6</div>
+            <div class="rule-text">
+              <h3>Win Condition</h3>
+              <p><strong>People win</strong> if all imposters are eliminated. <strong>Imposters win</strong> if they equal or outnumber the remaining players.</p>
+            </div>
+          </div>
+        </div>
+        <button id="btn-back-welcome" class="btn btn-secondary">Back</button>
+      </div>
+    </section>
+
+    <!-- Screen: Mode Select -->
+    <section id="screen-mode-select" class="screen">
+      <div class="screen-content welcome-content">
+        <div class="welcome-hero">
+          <div class="welcome-icon">🎮</div>
+          <h2>Choose Game Mode</h2>
+          <p class="description">Play on a single device or online with friends on separate devices.</p>
+        </div>
+        <div class="mode-cards">
+          <div class="mode-card" id="btn-mode-local">
+            <div class="mode-icon">📱</div>
+            <h3>Local Play</h3>
+            <p>Pass & Play on one device. Great for in-person gatherings.</p>
+          </div>
+          <div class="mode-card" id="btn-mode-online">
+            <div class="mode-icon">🌐</div>
+            <h3>Online Play</h3>
+            <p>Each player uses their own device. Share a room code to join.</p>
+          </div>
+        </div>
+        <button id="btn-back-mode" class="btn btn-ghost">Back</button>
+      </div>
+    </section>
+
+    <!-- Screen: Online Lobby -->
+    <section id="screen-lobby" class="screen">
+      <div class="screen-content">
+        <h2>Online Lobby</h2>
+
+        <!-- Tab Bar -->
+        <div class="lobby-tabs" id="lobby-tab-bar">
+          <button id="lobby-create-tab" class="lobby-tab active">Create Room</button>
+          <button id="lobby-join-tab" class="lobby-tab">Join Room</button>
+        </div>
+
+        <!-- Create Room Section -->
+        <div id="lobby-create-section" class="lobby-section">
+          <div class="setup-section">
+            <label class="sub-label">Your Name</label>
+            <input type="text" id="create-player-name" class="input" placeholder="Enter your name" maxlength="20" autocomplete="off">
+          </div>
+          <button id="btn-create-room" class="btn btn-primary btn-large">Create Room</button>
+        </div>
+
+        <!-- Join Room Section -->
+        <div id="lobby-join-section" class="lobby-section hidden">
+          <div class="setup-section">
+            <label class="sub-label">Your Name</label>
+            <input type="text" id="join-player-name" class="input" placeholder="Enter your name" maxlength="20" autocomplete="off">
+          </div>
+          <div class="setup-section">
+            <label class="sub-label">Room Code</label>
+            <input type="text" id="join-room-code" class="input room-code-input" placeholder="e.g., ABC123" maxlength="6" autocomplete="off">
+          </div>
+          <button id="btn-join-room" class="btn btn-primary btn-large">Join Room</button>
+        </div>
+
+        <!-- Error Message -->
+        <div id="lobby-error" class="error-msg hidden"></div>
+
+        <!-- Room Info (shown after create/join) -->
+        <div id="lobby-room-info" class="hidden">
+          <div class="room-code-display">
+            <span class="room-code-label">Room Code</span>
+            <div class="room-code-box">
+              <span id="lobby-room-code" class="room-code-value">------</span>
+              <button id="btn-copy-room-code" class="btn btn-ghost btn-small">Copy</button>
+            </div>
+            <p class="hint-text">Share this code with your friends!</p>
+          </div>
+
+          <!-- Player List -->
+          <div class="setup-section">
+            <label class="section-label">Players (<span id="lobby-player-count">0</span>)</label>
+            <div id="lobby-player-list" class="lobby-player-list"></div>
+          </div>
+
+          <!-- Settings (Host Only) -->
+          <div id="lobby-settings" class="setup-section hidden">
+            <label class="section-label">Settings</label>
+            <div class="settings-grid">
+              <div class="setting-row">
+                <label class="setting-label">Discussion Timer</label>
+                <div class="setting-control">
+                  <input type="range" id="setting-timer" min="30" max="300" step="10" value="120" class="setting-slider">
+                  <span id="setting-timer-value" class="setting-value">120s</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <label class="setting-label">Imposter Count</label>
+                <select id="setting-imposters" class="input select setting-select">
+                  <option value="0">Auto</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <label class="setting-label">Max Rounds</label>
+                <input type="number" id="setting-max-rounds" class="input setting-input" placeholder="Unlimited" min="0" max="20" value="0">
+                <span class="hint-text">0 = unlimited</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Word Selection (Host Only) -->
+          <div id="lobby-word-section" class="setup-section">
+            <label class="section-label">Words</label>
+            <div class="word-mode-toggle" id="lobby-word-mode">
+              <button class="word-mode-btn active" data-mode="manual">Manual Entry</button>
+              <button class="word-mode-btn" data-mode="pack">Word Packs</button>
+            </div>
+
+            <!-- Manual Word Entry -->
+            <div id="lobby-manual-words" class="word-inputs">
+              <div class="word-input-group">
+                <label class="sub-label">Normal Word</label>
+                <input type="text" id="lobby-normal-word" class="input" placeholder="e.g., Apple" maxlength="40" autocomplete="off">
+              </div>
+              <div class="word-input-group">
+                <label class="sub-label">Imposter Word</label>
+                <input type="text" id="lobby-imposter-word" class="input" placeholder="e.g., Orange" maxlength="40" autocomplete="off">
+              </div>
+            </div>
+
+            <!-- Word Packs -->
+            <div id="lobby-word-packs" class="word-packs-grid hidden"></div>
+            <div id="selected-pack-words" class="hidden"></div>
+            <button id="btn-shuffle-words" class="btn btn-ghost btn-small hidden" style="margin-top: 8px">Shuffle Words</button>
+          </div>
+
+          <button id="btn-lobby-start" class="btn btn-primary btn-large hidden">Start Game</button>
+          <p id="lobby-waiting" class="waiting-text hidden">Waiting for host to start the game...</p>
+          <button id="btn-back-to-lobby" class="btn btn-ghost" style="margin-top:12px">Leave Room</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen: Local Setup -->
+    <section id="screen-setup" class="screen">
+      <div class="screen-content">
+        <h2>Game Setup</h2>
+
+        <!-- Player Names -->
+        <div class="setup-section">
+          <label class="section-label">Players</label>
+          <div id="player-inputs" class="player-inputs">
+            <div class="player-input-row">
+              <input type="text" class="input player-name" placeholder="Player 1" maxlength="20" autocomplete="off">
+              <button class="btn-icon btn-remove-player hidden" title="Remove">✕</button>
+            </div>
+            <div class="player-input-row">
+              <input type="text" class="input player-name" placeholder="Player 2" maxlength="20" autocomplete="off">
+              <button class="btn-icon btn-remove-player hidden" title="Remove">✕</button>
+            </div>
+            <div class="player-input-row">
+              <input type="text" class="input player-name" placeholder="Player 3" maxlength="20" autocomplete="off">
+              <button class="btn-icon btn-remove-player hidden" title="Remove">✕</button>
+            </div>
+          </div>
+          <button id="btn-add-player" class="btn btn-ghost btn-small">+ Add Player</button>
+        </div>
+
+        <!-- Coordinator -->
+        <div class="setup-section">
+          <label class="section-label">Coordinator (Game Master)</label>
+          <select id="coordinator-select" class="input select">
+            <option value="">None (everyone plays)</option>
+          </select>
+          <p class="hint-text">The Coordinator sets the words and doesn't participate in guessing.</p>
+        </div>
+
+        <!-- Words -->
+        <div class="setup-section">
+          <label class="section-label">Words</label>
+          <div class="word-mode-toggle" id="local-word-mode">
+            <button class="word-mode-btn active" data-mode="manual">Manual Entry</button>
+            <button class="word-mode-btn" data-mode="pack">Word Packs</button>
+          </div>
+
+          <div id="local-manual-words" class="word-inputs">
+            <div class="word-input-group">
+              <label class="sub-label">Normal Word</label>
+              <input type="text" id="normal-word" class="input" placeholder="e.g., Apple" maxlength="40" autocomplete="off">
+            </div>
+            <div class="word-input-group">
+              <label class="sub-label">Imposter Word</label>
+              <input type="text" id="imposter-word" class="input" placeholder="e.g., Orange" maxlength="40" autocomplete="off">
+            </div>
+          </div>
+
+          <div id="local-word-packs" class="word-packs-grid hidden"></div>
+          <div id="local-selected-pack-words" class="hidden"></div>
+          <button id="btn-local-shuffle-words" class="btn btn-ghost btn-small hidden" style="margin-top: 8px">Shuffle Words</button>
+
+          <p class="hint-text">Choose two similar but different words. The closer they are, the harder the game!</p>
+        </div>
+
+        <!-- Game Info -->
+        <div id="game-info" class="game-info hidden">
+          <div class="info-chip">
+            <span class="info-label">Players</span>
+            <span id="info-player-count" class="info-value">0</span>
+          </div>
+          <div class="info-chip">
+            <span class="info-label">Imposters</span>
+            <span id="info-imposter-count" class="info-value">0</span>
+          </div>
+        </div>
+
+        <div id="setup-error" class="error-msg hidden"></div>
+
+        <button id="btn-start-game" class="btn btn-primary btn-large">Start Game</button>
+      </div>
+    </section>
+
+    <!-- Screen: Local Distribution -->
+    <section id="screen-distribute" class="screen">
+      <div class="screen-content distribute-content">
+        <div class="distribute-header">
+          <h2>Word Distribution</h2>
+          <div class="progress-bar">
+            <div id="distribute-progress" class="progress-fill"></div>
+          </div>
+          <p id="distribute-counter" class="counter-text">Player 1 of 5</p>
+        </div>
+
+        <div id="pass-prompt" class="pass-prompt">
+          <div class="pass-icon">📱</div>
+          <h3>Pass the device to</h3>
+          <p id="pass-player-name" class="pass-name">Player Name</p>
+          <p class="pass-instruction">Make sure no one else is looking!</p>
+          <button id="btn-ready" class="btn btn-primary btn-large">I'm Ready — Show My Word</button>
+        </div>
+
+        <div id="word-reveal" class="word-reveal hidden">
+          <div class="word-card" id="word-card">
+            <div class="word-card-inner">
+              <div class="word-card-front">
+                <p class="word-for">Your word is:</p>
+                <h2 id="reveal-word" class="revealed-word">WORD</h2>
+                <p class="word-remind">Remember it! Don't show anyone.</p>
+              </div>
+            </div>
+          </div>
+          <button id="btn-hide-pass" class="btn btn-primary btn-large">Hide & Pass 👉</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen: Online Distribution -->
+    <section id="screen-online-distribute" class="screen">
+      <div class="screen-content distribute-content">
+        <h2>Your Secret Word</h2>
+        <div class="word-card online-word-card">
+          <div class="word-card-inner">
+            <div class="word-card-front">
+              <p class="word-for">Your word is:</p>
+              <h2 id="online-word-display" class="revealed-word online-word">WORD</h2>
+              <p id="online-role-display" class="word-remind">Remember your word!</p>
+            </div>
+          </div>
+        </div>
+        <button id="btn-word-seen" class="btn btn-primary btn-large">I've Seen My Word</button>
+        <p id="word-seen-progress" class="counter-text">Waiting for all players...</p>
+      </div>
+    </section>
+
+    <!-- Screen: Local Hint Round -->
+    <section id="screen-hints" class="screen">
+      <div class="screen-content">
+        <h2>Hint Round</h2>
+        <p class="phase-desc">Each player gives <strong>one spoken hint</strong> about their word. Tap their name when done.</p>
+
+        <div id="hint-timer" class="timer-display hidden">
+          <span id="hint-timer-text">01:00</span>
+        </div>
+
+        <div id="hint-players" class="hint-player-list"></div>
+
+        <button id="btn-start-discussion" class="btn btn-primary btn-large" disabled>
+          Proceed to Discussion
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen: Online Hint Round -->
+    <section id="screen-online-hints" class="screen">
+      <div class="screen-content">
+        <h2>Hint Round <span id="online-round-badge" class="round-badge"></span></h2>
+        <p class="phase-desc">Give a <strong>spoken hint</strong> about your word, then tap the button below.</p>
+
+        <div id="online-hint-players" class="hint-player-list"></div>
+        <p id="online-hint-status" class="counter-text">0 of 0 hints given</p>
+
+        <button id="btn-hint-given" class="btn btn-primary btn-large">I Gave My Hint</button>
+        <button id="btn-online-discussion" class="btn btn-primary btn-large hidden">Proceed to Discussion</button>
+      </div>
+    </section>
+
+    <!-- Screen: Local Discussion -->
+    <section id="screen-discussion" class="screen">
+      <div class="screen-content">
+        <h2>Discussion</h2>
+        <p class="phase-desc">Discuss who might be the imposter. Share your suspicions!</p>
+
+        <div class="timer-display">
+          <span id="discussion-timer-text">02:00</span>
+        </div>
+        <div class="timer-controls">
+          <button id="btn-pause-timer" class="btn btn-ghost btn-small">⏸ Pause</button>
+          <button id="btn-reset-timer" class="btn btn-ghost btn-small">🔄 Reset</button>
+        </div>
+
+        <div class="active-players-display">
+          <h3>Still in the game:</h3>
+          <div id="discussion-players" class="player-chips"></div>
+        </div>
+
+        <button id="btn-start-voting" class="btn btn-primary btn-large">
+          Proceed to Voting
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen: Online Discussion -->
+    <section id="screen-online-discussion" class="screen">
+      <div class="screen-content">
+        <h2>Discussion</h2>
+        <p class="phase-desc">Discuss who might be the imposter!</p>
+
+        <div class="timer-display">
+          <span id="online-discussion-timer">02:00</span>
+        </div>
+
+        <div class="active-players-display">
+          <h3>Still in the game:</h3>
+          <div id="online-discussion-players" class="player-chips"></div>
+        </div>
+
+        <button id="btn-online-voting" class="btn btn-primary btn-large">
+          Proceed to Voting
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen: Local Voting -->
+    <section id="screen-voting" class="screen">
+      <div class="screen-content voting-content">
+        <div class="voting-header">
+          <h2>Voting</h2>
+          <div class="progress-bar">
+            <div id="voting-progress" class="progress-fill"></div>
+          </div>
+          <p id="voting-counter" class="counter-text">Voter 1 of 5</p>
+        </div>
+
+        <div id="voter-prompt" class="pass-prompt">
+          <div class="pass-icon">🗳️</div>
+          <h3>Pass the device to</h3>
+          <p id="voter-name" class="pass-name">Player Name</p>
+          <p class="pass-instruction">Vote for who you think is the imposter.</p>
+          <button id="btn-vote-ready" class="btn btn-primary btn-large">I'm Ready to Vote</button>
+        </div>
+
+        <div id="vote-selection" class="vote-selection hidden">
+          <h3 id="vote-header">Who is the imposter?</h3>
+          <div id="vote-candidates" class="vote-grid"></div>
+          <button id="btn-submit-vote" class="btn btn-primary btn-large" disabled>Submit Vote</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen: Online Voting -->
+    <section id="screen-online-voting" class="screen">
+      <div class="screen-content voting-content">
+        <h2>Vote</h2>
+        <p class="phase-desc">Who do you think is the imposter?</p>
+        <div id="online-vote-candidates" class="vote-grid"></div>
+        <p id="online-vote-status" class="counter-text">Select a player</p>
+        <button id="btn-online-submit-vote" class="btn btn-primary btn-large" disabled>Submit Vote</button>
+      </div>
+    </section>
+
+    <!-- Screen: Elimination (shared) -->
+    <section id="screen-elimination" class="screen">
+      <div class="screen-content elimination-content">
+        <h2>Elimination</h2>
+        <div id="vote-results" class="vote-results"></div>
+
+        <div id="eliminated-reveal" class="eliminated-reveal">
+          <div class="eliminated-card">
+            <p class="eliminated-name-label">Eliminated:</p>
+            <h2 id="eliminated-name" class="eliminated-name">Player</h2>
+            <div id="eliminated-role" class="eliminated-role"></div>
+          </div>
+        </div>
+
+        <div id="tie-section" class="tie-section hidden">
+          <h3>It's a tie!</h3>
+          <p id="tie-names" class="tie-names"></p>
+          <div class="tie-options">
+            <button id="btn-revote" class="btn btn-secondary">Revote</button>
+            <button id="btn-random-eliminate" class="btn btn-secondary">Random Elimination</button>
+            <button id="btn-skip-round" class="btn btn-ghost">Skip (No Elimination)</button>
+          </div>
+        </div>
+
+        <button id="btn-continue-game" class="btn btn-primary btn-large hidden">Continue</button>
+      </div>
+    </section>
+
+    <!-- Screen: Game Over (shared) -->
+    <section id="screen-gameover" class="screen">
+      <div class="screen-content gameover-content">
+        <div id="gameover-icon" class="gameover-icon">🏆</div>
+        <h1 id="gameover-title" class="gameover-title">Game Over</h1>
+        <p id="gameover-subtitle" class="gameover-subtitle"></p>
+
+        <div id="gameover-details" class="gameover-details">
+          <div class="reveal-section">
+            <h3>The Imposters Were:</h3>
+            <div id="imposter-reveal" class="imposter-reveal"></div>
+          </div>
+          <div class="reveal-section">
+            <h3>The Words:</h3>
+            <div class="word-reveal-final">
+              <div class="word-badge normal">
+                <span class="word-badge-label">Normal:</span>
+                <span id="reveal-normal-word" class="word-badge-value"></span>
+              </div>
+              <div class="word-badge imposter">
+                <span class="word-badge-label">Imposter:</span>
+                <span id="reveal-imposter-word" class="word-badge-value"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gameover-stats">
+          <div class="stat">
+            <span class="stat-value" id="stat-rounds">0</span>
+            <span class="stat-label">Rounds</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-eliminated">0</span>
+            <span class="stat-label">Eliminated</span>
+          </div>
+        </div>
+
+        <button id="btn-play-again" class="btn btn-primary btn-large">Play Again</button>
+        <button id="btn-new-game" class="btn btn-ghost">New Game (Reset All)</button>
+      </div>
+    </section>
+
+    <!-- Screen: Scores -->
+    <section id="screen-scores" class="screen">
+      <div class="screen-content">
+        <h2>Score History</h2>
+        <div id="scores-list" class="scores-list">
+          <p class="empty-scores">No games played yet.</p>
+        </div>
+        <div class="scores-actions">
+          <button id="btn-clear-scores" class="btn btn-ghost btn-small">Clear All Scores</button>
+        </div>
+        <button id="btn-back-scores" class="btn btn-secondary" style="margin-top:16px">Back</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Chat & Voice Panel (floating, online only) -->
+  <div id="comms-panel" class="comms-panel hidden">
+    <!-- Toggle buttons -->
+    <div class="comms-tabs">
+      <button id="comms-chat-tab" class="comms-tab active" title="Chat">💬</button>
+      <button id="comms-voice-tab" class="comms-tab" title="Voice">🎤</button>
+      <button id="comms-minimize" class="comms-tab comms-close" title="Minimize">▼</button>
+    </div>
+
+    <!-- Chat Section -->
+    <div id="comms-chat" class="comms-section">
+      <div id="chat-messages" class="chat-messages"></div>
+      <div class="chat-input-row">
+        <input id="chat-input" type="text" placeholder="Type a message..." maxlength="200" autocomplete="off">
+        <button id="btn-send-chat" class="btn btn-primary btn-small">Send</button>
+      </div>
+    </div>
+
+    <!-- Voice Section -->
+    <div id="comms-voice" class="comms-section hidden">
+      <div id="voice-status" class="voice-status">
+        <span id="voice-status-text">Voice chat off</span>
+      </div>
+      <div id="voice-participants" class="voice-participants"></div>
+      <div class="voice-controls">
+        <button id="btn-voice-toggle" class="btn btn-primary btn-large voice-btn">🎤 Join Voice</button>
+        <button id="btn-voice-mute" class="btn btn-secondary btn-small voice-btn hidden">🔇 Mute</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating open button when panel is minimized -->
+  <button id="comms-open-btn" class="comms-open-btn hidden">💬</button>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="wordpacks.js"></script>
+  <script src="game.js"></script>
+  <script src="multiplayer.js"></script>
+</body>
+</html>
